@@ -15,21 +15,21 @@ namespace MergeSample
         /// <param name="standard"></param>
         /// <param name="comparison"></param>
         /// <returns></returns>
-        public static (bool success, WorkDay newDay) Do(WorkDay standard, WorkDay comparison)
+        public static (bool success, EquipmentState newDay) Do(EquipmentState standard, EquipmentState comparison)
         {
             //完全に重ならない
-            if (standard.End < comparison.Start || comparison.End < standard.Start)
+            if (standard.validend_dt < comparison.validsta_dt || comparison.validend_dt < standard.validsta_dt)
             {
                 return (false, null);
             }
 
             //何れかが重なるる
-            var ns = standard.Start < comparison.Start ? standard.Start : comparison.Start;
-            var ne = comparison.End < standard.End ? standard.End : comparison.End;
+            var ns = standard.validsta_dt < comparison.validsta_dt ? standard.validsta_dt : comparison.validsta_dt;
+            var ne = comparison.validend_dt < standard.validend_dt ? standard.validend_dt : comparison.validend_dt;
 #if DEBUG
             Console.WriteLine((ns, ne));
 #endif
-            return (true, new WorkDay() { Start = ns, End = ne });
+            return (true, new EquipmentState() { validsta_dt = ns, validend_dt = ne });
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace MergeSample
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        public static (bool success, WorkDay newDay, WorkDay outDay) Check(HashSet<WorkDay> target)
+        public static (bool success, EquipmentState newDay, EquipmentState outDay) Check(HashSet<EquipmentState> target)
         {
             var combinations = Combination.Enumerate(target, 2, false);
 
@@ -45,7 +45,7 @@ namespace MergeSample
             {
                 var (success, newDay) = Do(elem.v[0], elem.v[1]);
 #if DEBUG
-                Console.WriteLine($"{elem.i + 1:00} : {success} : ({string.Join(",", elem.v.Select(x => (x.Start, x.End)).ToArray())})");
+                Console.WriteLine($"{elem.i + 1:00} : {success} : ({string.Join(",", elem.v.Select(x => (x.validsta_dt, x.validend_dt)).ToArray())})");
 #endif
                 if (success) return (false, newDay, elem.v[0].TimeSpan < elem.v[1].TimeSpan ? elem.v[0] : elem.v[1]);
             }
@@ -58,13 +58,13 @@ namespace MergeSample
         /// <param name="target"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public static (bool success, int count, HashSet<WorkDay> results) SelfHealing(HashSet<WorkDay> target, int limit = 10)
+        public static (bool success, int count, HashSet<EquipmentState> results) SelfHealing(HashSet<EquipmentState> target, int limit = 10)
         {
-            var temp = new HashSet<WorkDay>(target);
+            var temp = new HashSet<EquipmentState>(target);
 
             int count = 0;
 
-            (bool success, WorkDay newDay, WorkDay outDay) check = Check(temp);
+            (bool success, EquipmentState newDay, EquipmentState outDay) check = Check(temp);
 
             while (!check.success)
             {
@@ -88,17 +88,17 @@ namespace MergeSample
                 }
             }
 
-            return (true, count, new HashSet<WorkDay>(temp.OrderBy(c => c)));
+            return (true, count, new HashSet<EquipmentState>(temp.OrderBy(c => c)));
         }
 
-        public static (bool success, HashSet<WorkDay> results) DoList(HashSet<WorkDay> standard, WorkDay comparison)
+        public static (bool success, HashSet<EquipmentState> results) DoList(HashSet<EquipmentState> standard, EquipmentState comparison)
         {
             if (standard == null)
             {
                 return (false, null);
             }
 
-            var temp = new HashSet<WorkDay>(standard);
+            var temp = new HashSet<EquipmentState>(standard);
 
             if (comparison == null)
             {

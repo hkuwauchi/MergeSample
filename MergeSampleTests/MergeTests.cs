@@ -7,53 +7,53 @@ namespace MergeSample.Tests
     [TestClass()]
     public class MergeTests
     {
-        readonly WorkDay Standard = new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") };
+        readonly EquipmentState Standard = new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") };
 
-        readonly Dictionary<string, (WorkDay comparision, (bool success, WorkDay newDay) expected)> TestData = new Dictionary<string, (WorkDay comparision, (bool success, WorkDay newDay) expected)>()
+        readonly Dictionary<string, (EquipmentState comparision, (bool success, EquipmentState newDay) expected)> TestData = new Dictionary<string, (EquipmentState comparision, (bool success, EquipmentState newDay) expected)>()
         {
             //完全に重ならない
             //S   :        |------|
             //C1-1:                |------|
             //C1-2:|------|
-            { "C1-1", (new WorkDay() { Start = DateTime.Parse("2020/4/10 21:00:00"), End = DateTime.Parse("2020/4/10 22:00:00") },(false,null)) },
-            { "C1-2", (new WorkDay() { Start = DateTime.Parse("2020/4/10 06:00:00"), End = DateTime.Parse("2020/4/10 07:00:00") },(false,null)) },
+            { "C1-1", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 21:00:00"), validend_dt = DateTime.Parse("2020/4/10 22:00:00") },(false,null)) },
+            { "C1-2", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 06:00:00"), validend_dt = DateTime.Parse("2020/4/10 07:00:00") },(false,null)) },
             //何れかが重なるる
             //結合
             //S   :       |------|
             //C2-1:              |------|
             //C2-2:|------|
-            { "C2-1", (new WorkDay() { Start = DateTime.Parse("2020/4/10 20:00:00"), End = DateTime.Parse("2020/4/10 21:00:00") },(true, new WorkDay() { Start = DateTime.Parse("2020/4/10 08:00:00"), End = DateTime.Parse("2020/4/10 21:00:00") })) },
-            { "C2-2", (new WorkDay() { Start = DateTime.Parse("2020/4/10 07:00:00"), End = DateTime.Parse("2020/4/10 08:00:00") },(true, new WorkDay() { Start = DateTime.Parse("2020/4/10 07:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") })) },
+            { "C2-1", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 20:00:00"), validend_dt = DateTime.Parse("2020/4/10 21:00:00") },(true, new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 08:00:00"), validend_dt = DateTime.Parse("2020/4/10 21:00:00") })) },
+            { "C2-2", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 07:00:00"), validend_dt = DateTime.Parse("2020/4/10 08:00:00") },(true, new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 07:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") })) },
             //完全に包摂
             //S   :|------|
             //C3-1:|------|
             //C3-2:|----|
             //C3-3:  |----|
             //C3-4: |----|
-            { "C3-1", (new WorkDay() { Start = DateTime.Parse("2020/4/10 08:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") }, (true,new WorkDay() { Start = DateTime.Parse("2020/4/10 08:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") })) },
-            { "C3-2", (new WorkDay() { Start = DateTime.Parse("2020/4/10 08:00:00"), End = DateTime.Parse("2020/4/10 19:00:00") }, (true,new WorkDay() { Start = DateTime.Parse("2020/4/10 08:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") })) },
-            { "C3-3", (new WorkDay() { Start = DateTime.Parse("2020/4/10 09:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") }, (true,new WorkDay() { Start = DateTime.Parse("2020/4/10 08:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") })) },
-            { "C3-4", (new WorkDay() { Start = DateTime.Parse("2020/4/10 09:00:00"), End = DateTime.Parse("2020/4/10 19:00:00") }, (true,new WorkDay() { Start = DateTime.Parse("2020/4/10 08:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") })) },
+            { "C3-1", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 08:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") }, (true,new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 08:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") })) },
+            { "C3-2", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 08:00:00"), validend_dt = DateTime.Parse("2020/4/10 19:00:00") }, (true,new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 08:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") })) },
+            { "C3-3", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 09:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") }, (true,new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 08:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") })) },
+            { "C3-4", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 09:00:00"), validend_dt = DateTime.Parse("2020/4/10 19:00:00") }, (true,new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 08:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") })) },
             //両方の拡張（入れ替え）
             //S   : |------|
             //C4-1:|--------|
-            { "C4-1", (new WorkDay() { Start = DateTime.Parse("2020/4/10 07:00:00"), End = DateTime.Parse("2020/4/10 21:00:00") }, (true,new WorkDay() { Start = DateTime.Parse("2020/4/10 07:00:00"), End = DateTime.Parse("2020/4/10 21:00:00") })) },
+            { "C4-1", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 07:00:00"), validend_dt = DateTime.Parse("2020/4/10 21:00:00") }, (true,new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 07:00:00"), validend_dt = DateTime.Parse("2020/4/10 21:00:00") })) },
             //開始の拡張
             //S   : |------|
             //C5-1:|------|
             //C5-2:|-------|
             //C5-3:|--------|
-            { "C5-1", (new WorkDay() { Start = DateTime.Parse("2020/4/10 07:00:00"), End = DateTime.Parse("2020/4/10 19:00:00") }, (true,new WorkDay() { Start = DateTime.Parse("2020/4/10 07:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") })) },
-            { "C5-2", (new WorkDay() { Start = DateTime.Parse("2020/4/10 07:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") }, (true,new WorkDay() { Start = DateTime.Parse("2020/4/10 07:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") })) },
-            { "C5-3", (new WorkDay() { Start = DateTime.Parse("2020/4/10 07:00:00"), End = DateTime.Parse("2020/4/10 21:00:00") }, (true,new WorkDay() { Start = DateTime.Parse("2020/4/10 07:00:00"), End = DateTime.Parse("2020/4/10 21:00:00") })) },
+            { "C5-1", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 07:00:00"), validend_dt = DateTime.Parse("2020/4/10 19:00:00") }, (true,new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 07:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") })) },
+            { "C5-2", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 07:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") }, (true,new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 07:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") })) },
+            { "C5-3", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 07:00:00"), validend_dt = DateTime.Parse("2020/4/10 21:00:00") }, (true,new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 07:00:00"), validend_dt = DateTime.Parse("2020/4/10 21:00:00") })) },
             //終了の拡張
             //S   : |------|
             //C6-1:  |------|
             //C6-2: |-------|
             //C6-3:|--------|
-            { "C6-1", (new WorkDay() { Start = DateTime.Parse("2020/4/10 09:00:00"), End = DateTime.Parse("2020/4/10 21:00:00") }, (true,new WorkDay() { Start = DateTime.Parse("2020/4/10 08:00:00"), End = DateTime.Parse("2020/4/10 21:00:00") })) },
-            { "C6-2", (new WorkDay() { Start = DateTime.Parse("2020/4/10 08:00:00"), End = DateTime.Parse("2020/4/10 21:00:00") }, (true,new WorkDay() { Start = DateTime.Parse("2020/4/10 08:00:00"), End = DateTime.Parse("2020/4/10 21:00:00") })) },
-            { "C6-3", (new WorkDay() { Start = DateTime.Parse("2020/4/10 07:00:00"), End = DateTime.Parse("2020/4/10 21:00:00") }, (true,new WorkDay() { Start = DateTime.Parse("2020/4/10 07:00:00"), End = DateTime.Parse("2020/4/10 21:00:00") })) },
+            { "C6-1", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 09:00:00"), validend_dt = DateTime.Parse("2020/4/10 21:00:00") }, (true,new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 08:00:00"), validend_dt = DateTime.Parse("2020/4/10 21:00:00") })) },
+            { "C6-2", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 08:00:00"), validend_dt = DateTime.Parse("2020/4/10 21:00:00") }, (true,new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 08:00:00"), validend_dt = DateTime.Parse("2020/4/10 21:00:00") })) },
+            { "C6-3", (new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 07:00:00"), validend_dt = DateTime.Parse("2020/4/10 21:00:00") }, (true,new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 07:00:00"), validend_dt = DateTime.Parse("2020/4/10 21:00:00") })) },
         };
 
         [TestMethod()]
@@ -77,27 +77,27 @@ namespace MergeSample.Tests
             var result = Merge.Do(Standard, TestData[key].comparision);
             if (result.success)
             {
-                Console.WriteLine((result.newDay.Start, result.newDay.End));
+                Console.WriteLine((result.newDay.validsta_dt, result.newDay.validend_dt));
             }
             result.Is(TestData[key].expected);
         }
 
-        readonly Dictionary<string, ((bool success, WorkDay newDay, WorkDay outDay) expected, HashSet<WorkDay> list)> Combination = new Dictionary<string, ((bool success, WorkDay newDay, WorkDay outDay) expected, HashSet<WorkDay> list)>()
+        readonly Dictionary<string, ((bool success, EquipmentState newDay, EquipmentState outDay) expected, HashSet<EquipmentState> list)> Combination = new Dictionary<string, ((bool success, EquipmentState newDay, EquipmentState outDay) expected, HashSet<EquipmentState> list)>()
         {
-            {"C1-1", ((true,null,null),new HashSet<WorkDay>()
+            {"C1-1", ((true,null,null),new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/11 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/12 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/11 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/12 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 })},
             {"C1-2", ((false,
-                new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
-                new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/11 20:00:00") }),
-                new HashSet<WorkDay>()
+                new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
+                new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/11 20:00:00") }),
+                new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/11 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/11 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 })},
         };
 
@@ -110,32 +110,32 @@ namespace MergeSample.Tests
             result.Is(Combination[key].expected);
         }
 
-        readonly Dictionary<string, ((bool success, int count, HashSet<WorkDay> list) expected, HashSet<WorkDay> list)> SelfHealingTestData = new Dictionary<string, ((bool success, int count, HashSet<WorkDay> list) expected, HashSet<WorkDay> list)>()
+        readonly Dictionary<string, ((bool success, int count, HashSet<EquipmentState> list) expected, HashSet<EquipmentState> list)> SelfHealingTestData = new Dictionary<string, ((bool success, int count, HashSet<EquipmentState> list) expected, HashSet<EquipmentState> list)>()
         {
             {"C1-1", ((true,0,
-                new HashSet<WorkDay>()
+                new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/11 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/12 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/11 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/12 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 }),
-                new HashSet<WorkDay>()
+                new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/11 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/12 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/11 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/12 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 })},
             {"C1-2", ((true,1,
-                new HashSet<WorkDay>()
+                new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 }),
-                new HashSet<WorkDay>()
+                new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/11 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/11 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 })},
         };
 
@@ -150,63 +150,63 @@ namespace MergeSample.Tests
             results.Is(SelfHealingTestData[key].expected.list);
         }
 
-        readonly Dictionary<string, ((bool success, HashSet<WorkDay> results) expected, WorkDay comparison, HashSet<WorkDay> standard)> DoListTestData = new Dictionary<string, ((bool success, HashSet<WorkDay> results) expected, WorkDay comparison, HashSet<WorkDay> standard)>()
+        readonly Dictionary<string, ((bool success, HashSet<EquipmentState> results) expected, EquipmentState comparison, HashSet<EquipmentState> standard)> DoListTestData = new Dictionary<string, ((bool success, HashSet<EquipmentState> results) expected, EquipmentState comparison, HashSet<EquipmentState> standard)>()
         {
             {"C1-1", ((true,
-                new HashSet<WorkDay>()
+                new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/11 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/12 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/11 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/12 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 }),
-                new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/11 20:00:00") },
-                new HashSet<WorkDay>()
+                new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/11 20:00:00") },
+                new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/11 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/12 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/11 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/12 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 })},
             {"C1-2", ((true,
-                new HashSet<WorkDay>()
+                new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 7:00:00"), End = DateTime.Parse("2020/4/11 21:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/12 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 7:00:00"), validend_dt = DateTime.Parse("2020/4/11 21:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/12 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 }),
-                new WorkDay() { Start = DateTime.Parse("2020/4/11 7:00:00"), End = DateTime.Parse("2020/4/11 21:00:00") },
-                new HashSet<WorkDay>()
+                new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 7:00:00"), validend_dt = DateTime.Parse("2020/4/11 21:00:00") },
+                new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/11 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/12 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/11 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/12 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 })},
             {"C1-3", ((true,
-                new HashSet<WorkDay>()
+                new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 7:00:00"), End = DateTime.Parse("2020/4/11 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/12 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 7:00:00"), validend_dt = DateTime.Parse("2020/4/11 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/12 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 }),
-                new WorkDay() { Start = DateTime.Parse("2020/4/11 7:00:00"), End = DateTime.Parse("2020/4/11 19:00:00") },
-                new HashSet<WorkDay>()
+                new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 7:00:00"), validend_dt = DateTime.Parse("2020/4/11 19:00:00") },
+                new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/11 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/12 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/11 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/12 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 })},
             {"C1-4", ((true,
-                new HashSet<WorkDay>()
+                new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/11 21:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/12 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/11 21:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/12 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 }),
-                new WorkDay() { Start = DateTime.Parse("2020/4/11 10:00:00"), End = DateTime.Parse("2020/4/11 21:00:00") },
-                new HashSet<WorkDay>()
+                new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 10:00:00"), validend_dt = DateTime.Parse("2020/4/11 21:00:00") },
+                new HashSet<EquipmentState>()
                 {
-                    new WorkDay() { Start = DateTime.Parse("2020/4/10 8:00:00"), End = DateTime.Parse("2020/4/10 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/11 8:00:00"), End = DateTime.Parse("2020/4/11 20:00:00") },
-                    new WorkDay() { Start = DateTime.Parse("2020/4/12 8:00:00"), End = DateTime.Parse("2020/4/12 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/10 8:00:00"), validend_dt = DateTime.Parse("2020/4/10 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/11 8:00:00"), validend_dt = DateTime.Parse("2020/4/11 20:00:00") },
+                    new EquipmentState() { validsta_dt = DateTime.Parse("2020/4/12 8:00:00"), validend_dt = DateTime.Parse("2020/4/12 20:00:00") },
                 })},
         };
 
